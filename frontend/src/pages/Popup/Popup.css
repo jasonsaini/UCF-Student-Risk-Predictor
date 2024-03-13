@@ -1,9 +1,13 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
 }
+
+
 
 .task-container {
   width: 80%;

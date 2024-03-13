@@ -1,19 +1,26 @@
 import React from 'react';
-import logo from '../../assets/img/logo.svg';
-import Greetings from '../../containers/Greetings/Greetings';
 import './Popup.css';
 
 const Popup = () => {
   return (
-    <div className="task-container">
+    <div className="text">
+
+      <div class="tabs">
+        <ul>
+          <li class="is-active"><a>Pictures</a></li>
+          <li><a>Music</a></li>
+          <li><a>Videos</a></li>
+          <li><a>Documents</a></li>
+        </ul>
+      </div>
       <div className="header">
-        <h1>Tasks</h1>
+        <h1 className='text-red-600'>Tasks</h1>
         <div className="date-range">Mar 4 to Mar 11</div>
       </div>
       <div className="progress">
         <div className="progress-circle">
           <span>0%</span>
-          <span>0/4 Complete</span>
+          <span>0/5 Complsdfsdfsdete</span>
         </div>
       </div>
       <div className="task-list">
