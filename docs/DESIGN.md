@@ -1,4 +1,4 @@
-```sql 
+``` 
 Frontend (Chrome Extension)
          |
          |  User Interface: Interacts with users, collects inputs, and displays results.
