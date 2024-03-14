@@ -1,4 +1,4 @@
-'''sql 
+```sql 
 Frontend (Chrome Extension)
          |
          |  User Interface: Interacts with users, collects inputs, and displays results.
@@ -32,4 +32,4 @@ AI/ML Model
 Back to Backend for storage and further processing.
 
 
-'''
+```
