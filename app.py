@@ -11,7 +11,7 @@ def fetch_data_from_api():
     #testing. Stastistics call seems to give us all the information we need, but I think looking into the question call might still some useful info.
     #https://canvas.instructure.com/api/v1/courses/8625733/quizzes/16949911/statistics
     #https://canvas.instructure.com/api/v1/courses/8625733/quizzes/16949911/questions
-    access_token = '7~BA14Jhif9Im1vFkYT0sgqmm094w8QunmPFMGCaVVhzpWrY5yDuYgy1CqbqCeDbhd'
+    access_token = #accesstoken
 
     headers ={
         'Authorization': f'Bearer {access_token}'
