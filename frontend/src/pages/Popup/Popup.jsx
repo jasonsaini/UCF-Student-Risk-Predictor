@@ -1,57 +1,86 @@
-import React from 'react';
-import { ReactDOM } from 'react';
+import React, { useState } from 'react';
 import './Popup.css';
-import '../Popup/index.html'
-
-
-const currDate = new Date().toLocaleDateString();
-const endWeek = new Date().toLocaleDateString() 
-
+// Note: You typically cannot import HTML files like this in React. Consider serving it separately or integrating its content into your React app differently.
 
 const Popup = () => {
-  return (
-  <>
-      <div>
-        <div className='text-center text-lg font-bold' >Tasks</div>
-          
-      </div>
-      <div className="progress">
-        <div className="progress-circle">
-          <span>0%</span>
-          <span>0/5 Complsdfsdfsdete</span>
-        </div>
-      </div>
-      <div className="task-list">
-        {/* Task Section */}
-        <div className="task-section">
-          <h2>due 2 days</h2>
-          <div className="task" data-points={4}>
-            <span className="task-title">Practice Exam</span>
-            <span className="due-date">Due Mar 7 at 11:59 PM</span>
-          </div>
-          <div className="task" data-points={11}>
-            <span className="task-title">Honor Code</span>
-            <span className="due-date">Due Mar 7 at 11:59 PM</span>
-          </div>
-          <div className="task" data-points={100}>
-            <span className="task-title">Homework Assignment 3</span>
-            <span className="due-date">Due Mar 7 at 11:59 PM</span>
-          </div>
-        </div>
-        {/* Another Task Section */}
-        <div className="task-section">
-          <h2>due 3 days</h2>
-          <div className="task" data-points={5}>
-            <span className="task-title">Journal - Week 4</span>
-            <span className="due-date">Due Mar 8 at 11:59 PM</span>
-          </div>
-        </div>
-      </div>
-      <div className="add-task-button">
-        <button>+ New Task</button>
-      </div>
-    </>
+  // State to track the active tab ('assignments' or 'videos')
+  const [activeTab, setActiveTab] = useState('assignments');
+  
 
+  return (
+    <body>
+       <div>
+        <div className='text-center text-3xl font-bold'>Risk Predictor</div>
+       </div>
+      
+
+      {/* Tab Buttons */}
+      <div>
+        <button className='text-md px-8 text-center border-solid bg-gray-300 hover:bg-gray-400' id='assignment' onClick={() => setActiveTab('assignments')} >Assignments</button>
+        <button
+          className='text-md px-8 text-center border-solid bg-gray-300 hover:bg-gray-400'
+          id='video'
+          onClick={() => setActiveTab('videos')} // Set active tab to 'videos'
+        >
+          Videos
+        </button>
+      </div>
+      
+
+
+      <br />
+
+    
+      <div>
+        {activeTab === 'assignments' && (
+          <div className="task-section">
+            {/* Assignment-specific content here */}
+
+
+              
+
+            {/* Include your assignment tasks here */}
+          </div>
+        )}
+        {activeTab === 'videos' && (
+          <div className="video-section">
+            {/* Video-specific content here */}
+            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
+              <input type="radio" name="my-accordion-3" defaultChecked /> 
+              <div className="collapse-title text-lg font-bold">
+                COP4210 
+              </div>
+              <div className="collapse-content"> 
+                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
+              </div>
+            </div>
+            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
+              <input type="radio" name="my-accordion-3" /> 
+              <div className="collapse-title text-lg font-bold">
+                COP4533
+              </div>
+              <div className="collapse-content"> 
+                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
+              </div>
+            </div>
+            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
+              <input type="radio" name="my-accordion-3" /> 
+              <div className="collapse-title text-lg font-bold">
+                COP4934
+              </div>
+              <div className="collapse-content"> 
+                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
+
+              </div>
+            </div>
+            {/* Include your video tasks here */}
+          </div>
+        )}
+      </div>
+      </body>
+
+
+    
   );
 };
 
