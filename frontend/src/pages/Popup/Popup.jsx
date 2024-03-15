@@ -1,86 +1,51 @@
 import React, { useState } from 'react';
 import './Popup.css';
-// Note: You typically cannot import HTML files like this in React. Consider serving it separately or integrating its content into your React app differently.
 
 const Popup = () => {
-  // State to track the active tab ('assignments' or 'videos')
   const [activeTab, setActiveTab] = useState('assignments');
-  
 
   return (
-    <body>
-       <div>
-        <div className='text-center text-3xl font-bold'>Risk Predictor</div>
-       </div>
-      
+    <body className="bg-gray-100">
+      <div className="text-center text-2xl font-semibold text-gray-700 py-4">
+        Risk Predictor
+      </div>
 
-      {/* Tab Buttons */}
-      <div>
-        <button className='text-md px-8 text-center border-solid bg-gray-300 hover:bg-gray-400' id='assignment' onClick={() => setActiveTab('assignments')} >Assignments</button>
+      <div className="flex justify-center gap-4 my-4">
         <button
-          className='text-md px-8 text-center border-solid bg-gray-300 hover:bg-gray-400'
-          id='video'
-          onClick={() => setActiveTab('videos')} // Set active tab to 'videos'
+          className={`text-md px-4 py-2 border rounded ${activeTab === 'assignments' ? 'bg-blue-600 text-white' : 'bg-white border-gray-300 text-gray-600'
+            } hover:bg-blue-700 focus:outline-none`}
+          onClick={() => setActiveTab('assignments')}
+        >
+          Assignments
+        </button>
+        <button
+          className={`text-md px-4 py-2 border rounded ${activeTab === 'videos' ? 'bg-blue-600 text-white' : 'bg-white border-gray-300 text-gray-600'
+            } hover:bg-blue-700 focus:outline-none`}
+          onClick={() => setActiveTab('videos')}
         >
           Videos
         </button>
       </div>
-      
 
+      {activeTab === 'assignments' && (
+        <div className="max-w-2xl mx-auto ">
+          <ul className="space-y-2  ">
+            <li className='flex justify-between items-center bg-white shadow-sm px-4 py-3 border-l-4 border-blue-500 rounded hover:bg-blue-200 transition-colors duration-150 ease-in-out'>
+              <span className="font-medium text-gray-700">COT 4210 -- Homework 3</span>
+              <span className='text-sm font-bold text-red-600'>43%</span>
+            </li>
+            {/* Repeat for other list items */}
+          </ul>
+        </div>
+      )}
 
-      <br />
-
-    
-      <div>
-        {activeTab === 'assignments' && (
-          <div className="task-section">
-            {/* Assignment-specific content here */}
-
-
-              
-
-            {/* Include your assignment tasks here */}
-          </div>
-        )}
-        {activeTab === 'videos' && (
-          <div className="video-section">
-            {/* Video-specific content here */}
-            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
-              <input type="radio" name="my-accordion-3" defaultChecked /> 
-              <div className="collapse-title text-lg font-bold">
-                COP4210 
-              </div>
-              <div className="collapse-content"> 
-                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
-              </div>
-            </div>
-            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
-              <input type="radio" name="my-accordion-3" /> 
-              <div className="collapse-title text-lg font-bold">
-                COP4533
-              </div>
-              <div className="collapse-content"> 
-                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
-              </div>
-            </div>
-            <div className="collapse collapse-plus bg-base-200 bg-orange-400">
-              <input type="radio" name="my-accordion-3" /> 
-              <div className="collapse-title text-lg font-bold">
-                COP4934
-              </div>
-              <div className="collapse-content"> 
-                <li className='text-lg underline'><a href="https://www.youtube.com/watch?v=XISnO2YhnsY" target='_blank'>CS-50</a></li>
-
-              </div>
-            </div>
-            {/* Include your video tasks here */}
-          </div>
-        )}
-      </div>
-      </body>
-
-
-    
+      {activeTab === 'videos' && (
+        <div className="max-w-2xl mx-auto">
+          {/* Video-specific content here */}
+          {/* Use similar styling for videos as assignments */}
+        </div>
+      )}
+    </body>
   );
 };
 
