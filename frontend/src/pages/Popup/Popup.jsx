@@ -7,11 +7,45 @@ const Popup = () => {
 
   const imgs = { youtube }
 
+
+  const assignments = [
+    { name: 'COT 4210 -- Homework 3', score: 77 },
+    { name: 'COP 4934 - Journal Week 5', score: 33 },
+    // Add more assignments as needed
+  ];
+
+  // Calculate average score to determine risk
+  const averageScore =
+    assignments.reduce((acc, assignment) => acc + assignment.score, 0) / assignments.length;
+
+  // Risk factor, simple logic where below 50% is high risk
+  const riskFactor = averageScore < 50 ? 1 : averageScore < 70 ? 0.5 : 0;
+
+  // Define the risk meter color based on the risk factor
+  const riskMeterColor =
+    riskFactor === 1 ? 'bg-red-600' : riskFactor === 0.5 ? 'bg-yellow-500' : 'bg-green-500';
+
   return (
     <body className="bg-gray-100">
       <div className="text-center text-2xl font-semibold text-gray-700 py-4">
         Risk Predictor
       </div>
+
+      {/* Risk Meter */}
+      <div className="max-w-2xl mx-auto my-4">
+        <div className="w-full bg-gray-300 rounded-full h-4">
+          <div
+            className={`h-4 rounded-full transition-all duration-300 ease-in-out ${riskMeterColor}`}
+            style={{ width: `${(1 - riskFactor) * 100}%` }}
+          ></div>
+        </div>
+        <p className="text-center text-sm font-medium mt-1">
+          Risk of Failing: {riskFactor === 1 ? 'High' : riskFactor === 0.5 ? 'Medium' : 'Low'}
+        </p>
+      </div>
+
+
+
 
       <div className="flex justify-center gap-4 my-4">
         <button
