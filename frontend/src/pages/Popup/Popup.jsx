@@ -69,7 +69,7 @@ const Popup = () => {
           <ul className="space-y-2  ">
             <li className='flex justify-between items-center bg-white shadow-sm px-4 py-3 border-l-4 border-blue-500 rounded hover:bg-blue-200 transition-colors duration-150 ease-in-out'>
               <span className="font-medium text-gray-700">COT 4210 -- Homework 3</span>
-              <span className='text-sm font-bold text-red-600'>43%</span>
+              <span className='text-sm font-bold text-red-600'> 44%</span>
             </li>
             <li className='flex justify-between items-center bg-white shadow-sm px-4 py-3 border-l-4 border-blue-500 rounded hover:bg-blue-200 transition-colors duration-150 ease-in-out'>
               <span className="font-medium text-gray-700">COP 4934 - Journal Week 5</span>
