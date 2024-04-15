@@ -1,0 +1,105 @@
+    Points Possible
+(read only)
+(read only).1
+(read only).10
+(read only).11
+(read only).12
+(read only).13
+(read only).14
+(read only).15
+(read only).16
+(read only).17
+(read only).18
+(read only).19
+(read only).2
+(read only).20
+(read only).21
+(read only).22
+(read only).23
+(read only).24
+(read only).25
+(read only).26
+(read only).27
+(read only).28
+(read only).29
+(read only).3
+(read only).30
+(read only).31
+(read only).32
+(read only).33
+(read only).34
+(read only).35
+(read only).36
+(read only).37
+(read only).38
+(read only).39
+(read only).4
+(read only).40
+(read only).41
+(read only).42
+(read only).43
+(read only).44
+(read only).45
+(read only).46
+(read only).47
+(read only).48
+(read only).49
+(read only).5
+(read only).50
+(read only).51
+(read only).52
+(read only).53
+(read only).54
+(read only).55
+(read only).56
+(read only).57
+(read only).58
+(read only).59
+(read only).6
+(read only).60
+(read only).61
+(read only).62
+(read only).63
+(read only).64
+(read only).65
+(read only).66
+(read only).67
+(read only).68
+(read only).69
+(read only).7
+(read only).70
+(read only).71
+(read only).8
+(read only).9
+0
+1
+1.1
+1.2
+1.3
+1.4
+1.5
+1.6
+1.7
+100
+100.1
+100.2
+100.3
+100.4
+100.5
+100.6
+100.7
+100.8
+100.9
+2
+2.1
+25
+25.1
+25.2
+5
+5.1
+7
+Unnamed: 1
+Unnamed: 2
+Unnamed: 3
+Unnamed: 4
+Unnamed: 5

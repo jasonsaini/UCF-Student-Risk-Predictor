@@ -1,0 +1,16 @@
+- find data
+- clear rows with unusable data (test student)
+- remove NaN values
+- find common columns between all dataframes
+- numpy, pandas used 
+
+data:
+- moved into class for modularity
+- created get_common_columns function for training on common data
+- remove NaN columns
+- fill NaN entries with average df.fillna(df.mean())
+- ensure all values are numeric 
+    * for col in train_data.columns:
+          train_data[col] = pd.to_numeric(train_data[col], errors='coerce')
+- move into function for readability / modularity
+

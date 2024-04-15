@@ -1,0 +1,60 @@
+Assignment Reminders Current Score
+Assignment Reminders Final Score
+Assignment Reminders Unposted Current Score
+Assignment Reminders Unposted Final Score
+Assignments Current Score
+Assignments Final Score
+Assignments Unposted Current Score
+Assignments Unposted Final Score
+Component Scores (instead weighted in corresponding category after EC added) Current Score
+Component Scores (instead weighted in corresponding category after EC added) Final Score
+Component Scores (instead weighted in corresponding category after EC added) Unposted Current Score
+Component Scores (instead weighted in corresponding category after EC added) Unposted Final Score
+Current Score
+Extra Credit Current Score
+Extra Credit Final Score
+Extra Credit Unposted Current Score
+Extra Credit Unposted Final Score
+Final Score
+ID
+Imported Assignments Current Score
+Imported Assignments Final Score
+Imported Assignments Unposted Current Score
+Imported Assignments Unposted Final Score
+Migrated Quizzes Current Score
+Migrated Quizzes Final Score
+Migrated Quizzes Unposted Current Score
+Migrated Quizzes Unposted Final Score
+Project 1 Collaborative Category Current Score
+Project 1 Collaborative Category Final Score
+Project 1 Collaborative Category Unposted Current Score
+Project 1 Collaborative Category Unposted Final Score
+Project 1 Materials Overall Category Current Score
+Project 1 Materials Overall Category Final Score
+Project 1 Materials Overall Category Unposted Current Score
+Project 1 Materials Overall Category Unposted Final Score
+Project 2 Collaborative Activity Category Current Score
+Project 2 Collaborative Activity Category Final Score
+Project 2 Collaborative Activity Category Unposted Current Score
+Project 2 Collaborative Activity Category Unposted Final Score
+Project 2 Materials Overall Category Current Score
+Project 2 Materials Overall Category Final Score
+Project 2 Materials Overall Category Unposted Current Score
+Project 2 Materials Overall Category Unposted Final Score
+Quiz1-Category Current Score
+Quiz1-Category Final Score
+Quiz1-Category Unposted Current Score
+Quiz1-Category Unposted Final Score
+Quiz2-Category Current Score
+Quiz2-Category Final Score
+Quiz2-Category Unposted Current Score
+Quiz2-Category Unposted Final Score
+Quiz3-Category Current Score
+Quiz3-Category Final Score
+Quiz3-Category Unposted Current Score
+Quiz3-Category Unposted Final Score
+SIS Login ID
+SIS User ID
+Student
+Unposted Current Score
+Unposted Final Score
