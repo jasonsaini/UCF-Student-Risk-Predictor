@@ -1,0 +1,14 @@
+Series - one-dimensional labeled array, any data type
+DataFrame - table with rows/cols, or two-dimensional array
+
+dataframes (and assuming series as well) can be indexed by any 
+hashable type (int, string, etc.)
+
+looks like dataframes do not require a unique index for its types
+
+NumPy arrays have one dtype for the entire array while pandas DataFrames have one dtype per column.
+
+describe() shows a quick statistic summary of your data:
+
+TODO optimized data access methods are
+DataFrame.at(), DataFrame.iat(), DataFrame.loc() and DataFrame.iloc().

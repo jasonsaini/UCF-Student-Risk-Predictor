@@ -14,3 +14,6 @@ data:
           train_data[col] = pd.to_numeric(train_data[col], errors='coerce')
 - move into function for readability / modularity
 
+
+in test.py:
+- removed nonumeric columns, rows (ex: test and missing data)

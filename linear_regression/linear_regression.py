@@ -48,17 +48,45 @@ class DataSanitizer:
         return data.dropna(axis='columns')
 
     # Grab cleaned and sanitized data from the csv files
+    """
+
     def get_data():
         dataframes = []
         # Make dataframe with all relevant info
         for file in DataSanitizer.csv_files:
-            frame = DataSanitizer.clean_data(file, pd.read_csv(file), exclude_rows=DataSanitizer.skip_rows, exclude_cols=DataSanitizer.excluded_cols, removeLastRow=True)
+            frame = DataSanitizer.clean_data(file, pd.read_csv(file, header=None), exclude_rows=DataSanitizer.skip_rows, exclude_cols=DataSanitizer.excluded_cols, removeLastRow=True)
             print("Frame: '", frame, "'")
             dataframes.append(frame)
         # Merge all frames into one set
         train_data = pd.concat(dataframes, ignore_index=True)
         # Remove test student
         train_data = train_data[~train_data['Student'].str.startswith('Student, Test', na=False)]
+        # Cast strings to int
+        for col in train_data.columns:
+            train_data[col] = pd.to_numeric(train_data[col], errors='coerce')
+        # Remove string values that might have passed by undetected
+        train_data = train_data.select_dtypes(exclude=['string'])
+        # Fill the rest with the mean (TODO this should be tested for accuracy)
+        train_data.fillna(train_data.mean(), inplace=True)
+        return train_data
+    """
+    def get_data():
+        dataframes = []
+        # Make dataframe with all relevant info
+        for file in DataSanitizer.csv_files:
+            frame = pd.read_csv(file, header=None)
+            # Get the column names from the first row of the CSV file
+            column_names = frame.iloc[0]
+            # Update the excluded_cols list with the column names that are actually present
+            excluded_cols = [col for col in DataSanitizer.excluded_cols if col in column_names]
+            frame = DataSanitizer.clean_data(file, frame, exclude_rows=DataSanitizer.skip_rows, exclude_cols=excluded_cols, removeLastRow=True)
+            print("Frame: '", frame, "'")
+            dataframes.append(frame)
+        # Merge all frames into one set
+        train_data = pd.concat(dataframes, ignore_index=True)
+        # Remove test student if it exists
+        if 'Student' in train_data:
+            train_data = train_data[~train_data['Student'].str.startswith('Student, Test', na=False)]
         # Cast strings to int
         for col in train_data.columns:
             train_data[col] = pd.to_numeric(train_data[col], errors='coerce')
@@ -119,8 +147,8 @@ np.savetxt('train_data.txt', train_data, fmt='%s')
 print("Columns before dropping: ", train_data.columns)
 
 try:
-    X = train_data.drop('Final Score', axis='columns')
-    y = train_data['Final Score']
+    X = train_data.drop(-1, axis='columns')
+    y = train_data[-1]
 except KeyError:
     print("Final Score column not listed in data. Available columns are: ")
     for col in train_data.columns:
@@ -142,7 +170,7 @@ model.fit(X_train, y_train)
 # print("Mean Squared Error:", mean_squared_error(y_val, predictions))
 # print("Coefficient of Determination (R^2):", r2_score(y_val, predictions))
 
-test_csv = pd.read_csv(DataSanitizer.summer22, skiprows=[],
+test_csv = pd.read_csv(DataSanitizer.summer22, header=None, skiprows=[],
         usecols=DataSanitizer.get_common_columns())
 
 tabloo.show(test_csv)
@@ -151,10 +179,12 @@ test_data = DataSanitizer.clean_data(DataSanitizer.summer22, test_csv, exclude_r
 print("Column in test data?", 'Assignment Reminders Current Score' in test_data)
 
 try:
-    X_test = test_data.drop('Final Score', axis=1)
-    y_test = test_data['Final Score']
-except KeyError:
+    X_test = test_data.drop(test_data.columns[-1], axis='columns')
+    y_test = test_data[test_data.columns[-1]]
+except KeyError as e:
     print("Final Score column not listed in data. Available columns are: ")
+    print(f"An error occurred: {e}")
+    traceback.print_exc()
     for col in test_data.columns:
         print(col)
 
