@@ -2,6 +2,24 @@ import React, { useState } from 'react';
 import './Popup.css';
 import youtube from "../Popup/imgs/youtube.png"
 const Popup = () => {
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer 7~qgjCewHFGcI25c2nfC4C7WsHZFqMiPcOyzT2SgcCxA0xcm6PvJRMKdwLr5iRMcaD");
+  myHeaders.append("Cookie", "_csrf_token=E92j7dJYyWJC%2B1c76fzV%2BB9Gx1apfx1MgEoPRrZYRr50jJC74SinBjfJE1arz6OdUW3zJscvUiCzZUEM8xIs8A%3D%3D; _legacy_normandy_session=hWYkcDI52hz7WxTktAnWyA.-I-h_fm_Chw7ZbiGjANpdM-hXwR0yhZODLcm78e8iz1GoDTQUE_aNMhUbpbshIPWzV6vCOAIAmVacxFTh7MIZNkXLEXpyiqhfSPLdg7BtIQByX9-A1hz2jf_5XZuSlNF.fiy-CqkiEbv3VawUafy05I9mc7o.Zfzt7Q; canvas_session=hWYkcDI52hz7WxTktAnWyA.-I-h_fm_Chw7ZbiGjANpdM-hXwR0yhZODLcm78e8iz1GoDTQUE_aNMhUbpbshIPWzV6vCOAIAmVacxFTh7MIZNkXLEXpyiqhfSPLdg7BtIQByX9-A1hz2jf_5XZuSlNF.fiy-CqkiEbv3VawUafy05I9mc7o.Zfzt7Q; log_session_id=417d68957a9507a555430e469bf82e4a");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow"
+  };
+
+  fetch("https://canvas.instructure.com/api/v1/courses/8660249/quizzes/17522683/submissions", requestOptions)
+    .then((response) => response.text())
+    .then((result) => console.log(result))
+    .catch((error) => console.error(error));
+
+
+
   const [activeTab, setActiveTab] = useState('assignments');
 
 
