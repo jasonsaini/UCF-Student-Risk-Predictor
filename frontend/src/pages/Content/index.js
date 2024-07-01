@@ -1,19 +1,26 @@
 function injectSidebar() {
   const canvasApp = document.getElementById('application');
   if (canvasApp && canvasApp.classList.contains('ic-app')) {
+    console.log('Canvas app found. Injecting sidebar...');
+
     const sidebarContainer = document.createElement('div');
     sidebarContainer.id = 'custom-sidebar-container';
 
     const sidebarIframe = document.createElement('iframe');
-    sidebarIframe.src = chrome.runtime.getURL(
-      'frontend/src/pages/Content/sidebar.html'
-    );
+    const sidebarURL = chrome.runtime.getURL('sidebar.html');
+    console.log('Sidebar URL:', sidebarURL);
+
+    sidebarIframe.src = sidebarURL;
     sidebarIframe.style.width = '100%';
     sidebarIframe.style.height = '100%';
-    sidebarIframe.style.border = '100%';
+    sidebarIframe.style.border = 'none'; // Fixed the border style
 
     sidebarContainer.appendChild(sidebarIframe);
     document.body.appendChild(sidebarContainer);
+
+    console.log('Sidebar injected successfully');
+  } else {
+    console.log('Canvas app not found or not loaded yet.');
   }
 }
 

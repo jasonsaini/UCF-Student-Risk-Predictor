@@ -173,6 +173,20 @@ var options = {
           to: path.join(__dirname, 'build'),
           force: true,
         },
+        {
+          from: '/Users/justingamboa/SeniorDesign/UCF-Student-Risk-Predictor/sidebar.html',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/img/icon-34.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
       ],
     }),
     new CopyWebpackPlugin({

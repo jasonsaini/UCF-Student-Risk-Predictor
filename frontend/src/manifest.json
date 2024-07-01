@@ -20,12 +20,11 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["frontend/build/options.html", "frontend/src/pages/Content/sidebar.html"],
-      "matches": ["https://*/*"]
+      "resources": ["sidebar.html"],
+      "matches": ["<all_urls>"]
     }
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; frame-src 'self' chrome-extension://* https://*.instructure.com/* https://webcourses.ucf.edu/*"
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
-  
 }
