@@ -1,3 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Popup from '../Popup/Popup';
+
 function injectSidebar() {
   const canvasApp = document.getElementById('application');
   if (canvasApp && canvasApp.classList.contains('ic-app')) {
@@ -6,16 +10,9 @@ function injectSidebar() {
     const sidebarContainer = document.createElement('div');
     sidebarContainer.id = 'custom-sidebar-container';
 
-    const sidebarIframe = document.createElement('iframe');
-    const sidebarURL = chrome.runtime.getURL('sidebar.html');
-    console.log('Sidebar URL:', sidebarURL);
+    const root = ReactDOM.createRoot(sidebarContainer);
+    root.render(<Popup />);
 
-    sidebarIframe.src = sidebarURL;
-    sidebarIframe.style.width = '100%';
-    sidebarIframe.style.height = '100%';
-    sidebarIframe.style.border = 'none'; // Fixed the border style
-
-    sidebarContainer.appendChild(sidebarIframe);
     document.body.appendChild(sidebarContainer);
 
     console.log('Sidebar injected successfully');
