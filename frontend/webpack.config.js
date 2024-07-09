@@ -173,11 +173,6 @@ var options = {
           to: path.join(__dirname, 'build'),
           force: true,
         },
-        {
-          from: '/Users/justingamboa/SeniorDesign/UCF-Student-Risk-Predictor/sidebar.html',
-          to: path.join(__dirname, 'build'),
-          force: true,
-        },
       ],
     }),
     new CopyWebpackPlugin({

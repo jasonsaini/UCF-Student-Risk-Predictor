@@ -84,36 +84,174 @@ const InstructorView = () => {
     setNotifications([...notifications, message]);
   };
 
+  const styles = {
+    body: {
+      backgroundColor: '#f7fafc',
+      fontFamily: 'Arial, sans-serif',
+    },
+    container: {
+      maxWidth: '40rem',
+      margin: '1rem auto',
+      padding: '1rem',
+      backgroundColor: '#fff',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      borderRadius: '0.375rem',
+    },
+    title: {
+      fontSize: '1.125rem',
+      fontWeight: '600',
+      marginBottom: '0.5rem',
+    },
+    grid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '1rem',
+    },
+    item: {
+      textAlign: 'center',
+    },
+    itemTitle: {
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      marginBottom: '0.25rem',
+    },
+    highRisk: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      color: '#e53e3e',
+    },
+    mediumRisk: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      color: '#ecc94b',
+    },
+    lowRisk: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      color: '#48bb78',
+    },
+    averageScore: {
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      marginTop: '1rem',
+    },
+    studentList: {
+      listStyleType: 'none',
+      padding: '0',
+      margin: '0',
+    },
+    studentItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '0.75rem 1rem',
+      backgroundColor: '#fff',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      borderLeft: '4px solid transparent',
+      borderRadius: '0.375rem',
+      transition: 'background-color 0.15s ease-in-out',
+      cursor: 'pointer',
+    },
+    studentItemHover: {
+      backgroundColor: '#bee3f8',
+    },
+    studentName: {
+      fontSize: '1rem',
+      fontWeight: '500',
+      color: '#4a5568',
+    },
+    studentDetail: {
+      fontSize: '0.875rem',
+      color: '#a0aec0',
+    },
+    riskTag: {
+      padding: '0.25rem 0.5rem',
+      borderRadius: '0.375rem',
+      fontSize: '0.75rem',
+      fontWeight: '500',
+      color: '#fff',
+    },
+    highRiskTag: {
+      backgroundColor: '#e53e3e',
+    },
+    mediumRiskTag: {
+      backgroundColor: '#ecc94b',
+    },
+    lowRiskTag: {
+      backgroundColor: '#48bb78',
+    },
+    button: {
+      backgroundColor: '#e53e3e',
+      color: '#fff',
+      padding: '0.5rem 0.75rem',
+      borderRadius: '0.375rem',
+      cursor: 'pointer',
+      transition: 'background-color 0.15s ease-in-out',
+    },
+    buttonHover: {
+      backgroundColor: '#c53030',
+    },
+    textArea: {
+      width: '100%',
+      border: '1px solid #cbd5e0',
+      borderRadius: '0.375rem',
+      padding: '0.5rem',
+      marginBottom: '0.5rem',
+    },
+    messageButton: {
+      backgroundColor: '#3182ce',
+      color: '#fff',
+      padding: '0.5rem 0.75rem',
+      borderRadius: '0.375rem',
+      cursor: 'pointer',
+      transition: 'background-color 0.15s ease-in-out',
+    },
+    messageButtonHover: {
+      backgroundColor: '#2b6cb0',
+    },
+    notificationList: {
+      listStyleType: 'none',
+      padding: '0',
+      margin: '0',
+      marginTop: '1rem',
+    },
+    notificationItem: {
+      padding: '0.75rem 1rem',
+      backgroundColor: '#fff',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      borderLeft: '4px solid #3182ce',
+      borderRadius: '0.375rem',
+    },
+  };
+
   // Render the components
   return (
-    <body className="bg-gray-100">
+    <body style={styles.body}>
       {/* Class Performance Overview */}
-      <div className="max-w-2xl mx-auto my-4">
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-2">
-            Class Performance Overview
-          </h2>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <h3 className="text-sm font-medium mb-1">High Risk</h3>
-              <p className="text-2xl font-bold text-red-600">
+      <div style={styles.container}>
+        <div>
+          <h2 style={styles.title}>Class Performance Overview</h2>
+          <div style={styles.grid}>
+            <div style={styles.item}>
+              <h3 style={styles.itemTitle}>High Risk</h3>
+              <p style={styles.highRisk}>
                 {getClassPerformanceOverview().highRiskCount}
               </p>
             </div>
-            <div>
-              <h3 className="text-sm font-medium mb-1">Medium Risk</h3>
-              <p className="text-2xl font-bold text-yellow-500">
+            <div style={styles.item}>
+              <h3 style={styles.itemTitle}>Medium Risk</h3>
+              <p style={styles.mediumRisk}>
                 {getClassPerformanceOverview().mediumRiskCount}
               </p>
             </div>
-            <div>
-              <h3 className="text-sm font-medium mb-1">Low Risk</h3>
-              <p className="text-2xl font-bold text-green-500">
+            <div style={styles.item}>
+              <h3 style={styles.itemTitle}>Low Risk</h3>
+              <p style={styles.lowRisk}>
                 {getClassPerformanceOverview().lowRiskCount}
               </p>
             </div>
           </div>
-          <p className="text-sm font-medium mt-4">
+          <p style={styles.averageScore}>
             Average Score:{' '}
             {getClassPerformanceOverview().averageScore.toFixed(2)}%
           </p>
@@ -121,22 +259,25 @@ const InstructorView = () => {
       </div>
 
       {/* Student Risk Dashboard */}
-      <div className="max-w-2xl mx-auto my-4">
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-2">Student Risk Dashboard</h2>
-          <ul className="space-y-2">
+      <div style={styles.container}>
+        <div>
+          <h2 style={styles.title}>Student Risk Dashboard</h2>
+          <ul style={styles.studentList}>
             {students.map((student) => (
               <li
                 key={student.name}
-                className="flex justify-between items-center bg-white shadow-sm px-4 py-3 border-l-4 rounded hover:bg-blue-200 transition-colors duration-150 ease-in-out"
+                style={{
+                  ...styles.studentItem,
+                  ':hover': styles.studentItemHover,
+                }}
               >
                 <div>
-                  <h3 className="font-medium text-gray-700">{student.name}</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 style={styles.studentName}>{student.name}</h3>
+                  <p style={styles.studentDetail}>
                     Average Score:{' '}
                     {calculateAverageScore(student.scores).toFixed(2)}%
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p style={styles.studentDetail}>
                     Attendance:{' '}
                     {attendance[student.name].filter(Boolean).length}/
                     {attendance[student.name].length}
@@ -144,17 +285,18 @@ const InstructorView = () => {
                 </div>
                 <div>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      calculateRiskFactor(
+                    style={{
+                      ...styles.riskTag,
+                      ...(calculateRiskFactor(
                         calculateAverageScore(student.scores)
                       ) === 1
-                        ? 'bg-red-600 text-white'
+                        ? styles.highRiskTag
                         : calculateRiskFactor(
                             calculateAverageScore(student.scores)
                           ) === 0.5
-                        ? 'bg-yellow-500 text-white'
-                        : 'bg-green-500 text-white'
-                    }`}
+                        ? styles.mediumRiskTag
+                        : styles.lowRiskTag),
+                    }}
                   >
                     {calculateRiskFactor(
                       calculateAverageScore(student.scores)
@@ -174,12 +316,10 @@ const InstructorView = () => {
       </div>
 
       {/* Early Intervention Alerts */}
-      <div className="max-w-2xl mx-auto my-4">
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-2">
-            Early Intervention Alerts
-          </h2>
-          <ul className="space-y-2">
+      <div style={styles.container}>
+        <div>
+          <h2 style={styles.title}>Early Intervention Alerts</h2>
+          <ul style={styles.studentList}>
             {students
               .filter(
                 (student) =>
@@ -189,24 +329,25 @@ const InstructorView = () => {
               .map((student) => (
                 <li
                   key={student.name}
-                  className="flex justify-between items-center bg-white shadow-sm px-4 py-3 border-l-4 border-red-500 rounded"
+                  style={{
+                    ...styles.studentItem,
+                    borderLeft: '4px solid #e53e3e',
+                  }}
                 >
                   <div>
-                    <h3 className="font-medium text-gray-700">
-                      {student.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
+                    <h3 style={styles.studentName}>{student.name}</h3>
+                    <p style={styles.studentDetail}>
                       Average Score:{' '}
                       {calculateAverageScore(student.scores).toFixed(2)}%
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p style={styles.studentDetail}>
                       Attendance:{' '}
                       {attendance[student.name].filter(Boolean).length}/
                       {attendance[student.name].length}
                     </p>
                   </div>
                   <button
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded"
+                    style={{ ...styles.button, ':hover': styles.buttonHover }}
                     onClick={() =>
                       sendNotification(
                         `Sent intervention alert for ${student.name}`
@@ -222,28 +363,28 @@ const InstructorView = () => {
       </div>
 
       {/* Communication Tools */}
-      <div className="max-w-2xl mx-auto my-4">
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-2">Communication Tools</h2>
+      <div style={styles.container}>
+        <div>
+          <h2 style={styles.title}>Communication Tools</h2>
           <textarea
-            className="w-full border border-gray-300 rounded-lg p-2 mb-2"
+            style={styles.textArea}
             placeholder="Enter your message..."
           ></textarea>
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded"
+            style={{
+              ...styles.messageButton,
+              ':hover': styles.messageButtonHover,
+            }}
             onClick={() => sendNotification('Message sent to students')}
           >
             Send Message
           </button>
-          <div className="mt-4">
-            <h3 className="text-sm font-medium mb-1">Notifications</h3>
-            <ul className="space-y-2">
+          <div style={{ marginTop: '1rem' }}>
+            <h3 style={styles.itemTitle}>Notifications</h3>
+            <ul style={styles.notificationList}>
               {notifications.map((notification, index) => (
-                <li
-                  key={index}
-                  className="bg-white shadow-sm px-4 py-3 border-l-4 border-blue-500 rounded"
-                >
-                  <p className="text-sm text-gray-700">{notification}</p>
+                <li key={index} style={styles.notificationItem}>
+                  <p style={styles.studentDetail}>{notification}</p>
                 </li>
               ))}
             </ul>
