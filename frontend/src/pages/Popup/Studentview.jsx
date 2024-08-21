@@ -7,27 +7,46 @@ const StudentView = () => {
   const [assignments, setAssignments] = useState([]);
   const [recommendedVideos, setRecommendedVideos] = useState([]);
   const [notes, setNotes] = useState([]);
+  const [courseId, setCourseId] = useState('1391839'); // Replace with your actual course ID or fetch it dynamically
+
   const name = 'Justin Gamboa';
 
   const imgs = { youtube };
 
   useEffect(() => {
-    setAssignments([
-      { name: 'COT 4210 -- Homework 3', score: 77 },
-      { name: 'COP 4934 - Journal Week 5', score: 33 },
-    ]);
+    const fetchAssignments = async () => {
+      const myHeaders = new Headers();
+      myHeaders.append(
+        'Authorization',
+        'Bearer 1158~xYFM7MAFfKKQGcBvnwHMFBB3nwCwT2Q2V2WAkPM8N974AHFkXRmmDVa986Nr8YR8'
+      );
 
-    setRecommendedVideos([
-      {
-        name: 'COT 4210 - Understanding Recursion',
-        link: 'https://youtube.com',
-      },
-      {
-        name: 'COP 4934 - Writing Effective Journals',
-        link: 'https://youtube.com',
-      },
-    ]);
-  }, []);
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+
+      try {
+        const response = await fetch(
+          `https://webcourses.ucf.edu/api/v1/courses/1468549/assignments`,
+          requestOptions
+        );
+        const result = await response.json();
+
+        const formattedAssignments = result.map((assignment) => ({
+          name: assignment.name,
+          score: assignment.points_possible, // You might need to adjust this based on the actual API response
+        }));
+
+        setAssignments(formattedAssignments);
+      } catch (error) {
+        console.error('Error fetching assignments:', error);
+      }
+    };
+
+    fetchAssignments();
+  }, [courseId]);
 
   const calculateAverageScore = () => {
     return (
