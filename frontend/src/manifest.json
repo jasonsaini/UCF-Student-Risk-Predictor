@@ -20,7 +20,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["sidebar.html"],
+      "resources": ["sidebar.html","imgs/youtube.png"],
       "matches": ["<all_urls>"]
     }
   ],
