@@ -7,51 +7,77 @@ const StudentView = () => {
   const [assignments, setAssignments] = useState([]);
   const [recommendedVideos, setRecommendedVideos] = useState([]);
   const [notes, setNotes] = useState([]);
-  const [courseId, setCourseId] = useState('1391839'); // Replace with your actual course ID or fetch it dynamically
+  const [courseId, setCourseId] = useState('');
 
   const name = 'Justin Gamboa';
 
   const imgs = { youtube };
 
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        'Authorization',
-        'Bearer 1158~xYFM7MAFfKKQGcBvnwHMFBB3nwCwT2Q2V2WAkPM8N974AHFkXRmmDVa986Nr8YR8'
+  const fetchCurrentCourseId = () => {
+    const url = window.location.href;
+    const match = url.match(/\/courses\/(\d+)/);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  };
+
+  const fetchAssignments = async (courseId) => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      'Bearer 1158~xYFM7MAFfKKQGcBvnwHMFBB3nwCwT2Q2V2WAkPM8N974AHFkXRmmDVa986Nr8YR8'
+    );
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `https://webcourses.ucf.edu/api/v1/courses/${courseId}/assignments`,
+        requestOptions
       );
+      const result = await response.json();
 
-      const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow',
-      };
+      const formattedAssignments = result.map((assignment) => ({
+        name: assignment.name,
+        score: assignment.grade ? assignment.grade : 'N/A',
+      }));
 
-      try {
-        const response = await fetch(
-          `https://webcourses.ucf.edu/api/v1/courses/1468549/assignments`,
-          requestOptions
-        );
-        const result = await response.json();
+      setAssignments(formattedAssignments);
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+    }
+  };
 
-        const formattedAssignments = result.map((assignment) => ({
-          name: assignment.name,
-          score: assignment.points_possible, // You might need to adjust this based on the actual API response
-        }));
-
-        setAssignments(formattedAssignments);
-      } catch (error) {
-        console.error('Error fetching assignments:', error);
+  useEffect(() => {
+    const updateCourseAndAssignments = () => {
+      const currentCourseId = fetchCurrentCourseId();
+      if (currentCourseId && currentCourseId !== courseId) {
+        setCourseId(currentCourseId);
+        fetchAssignments(currentCourseId);
       }
     };
 
-    fetchAssignments();
+    updateCourseAndAssignments();
+
+    const intervalId = setInterval(updateCourseAndAssignments, 5000);
+
+    return () => clearInterval(intervalId);
   }, [courseId]);
 
   const calculateAverageScore = () => {
+    const gradedAssignments = assignments.filter(
+      (assignment) => assignment.score !== 'N/A'
+    );
     return (
-      assignments.reduce((acc, assignment) => acc + assignment.score, 0) /
-      assignments.length
+      gradedAssignments.reduce(
+        (acc, assignment) => acc + Number(assignment.score),
+        0
+      ) / gradedAssignments.length
     );
   };
 
@@ -129,22 +155,30 @@ const StudentView = () => {
       {activeTab === 'assignments' && (
         <div className="content-container">
           <h2 className="content-title">Your Assignments</h2>
-          <ul>
-            {assignments.map((assignment) => (
-              <li key={assignment.name} className="list-item">
-                <div>
-                  <h3 className="item-title">{assignment.name}</h3>
-                  <p
-                    className={`item-score ${
-                      assignment.score < 70 ? 'score-bad' : 'score-good'
-                    }`}
-                  >
-                    {assignment.score}%
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="assignments-list">
+            <ul>
+              {assignments.map((assignment) => (
+                <li key={assignment.name} className="list-item">
+                  <div>
+                    <h3 className="item-title">{assignment.name}</h3>
+                    <p
+                      className={`item-score ${
+                        assignment.score === 'N/A'
+                          ? ''
+                          : Number(assignment.score) < 70
+                          ? 'score-bad'
+                          : 'score-good'
+                      }`}
+                    >
+                      {assignment.score === 'N/A'
+                        ? 'N/A'
+                        : `${assignment.score}%`}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
