@@ -36,16 +36,47 @@ const StudentView = () => {
     };
 
     try {
-      const response = await fetch(
+      const assignmentsResponse = await fetch(
         `https://webcourses.ucf.edu/api/v1/courses/${courseId}/assignments`,
         requestOptions
       );
-      const result = await response.json();
+      const assignmentsResult = await assignmentsResponse.json();
+      console.log('Assignments:', assignmentsResult);
 
-      const formattedAssignments = result.map((assignment) => ({
-        name: assignment.name,
-        score: assignment.grade ? assignment.grade : 'N/A',
-      }));
+      const formattedAssignments = await Promise.all(
+        assignmentsResult.map(async (assignment) => {
+          console.log('Fetching submission for Assignment ID:', assignment.id);
+          try {
+            const submissionResponse = await fetch(
+              `https://webcourses.ucf.edu/api/v1/courses/${courseId}/assignments/${assignment.id}/submissions/self`,
+              requestOptions
+            );
+            if (!submissionResponse.ok) {
+              throw new Error(
+                `HTTP error! status: ${submissionResponse.status}`
+              );
+            }
+            const submissionResult = await submissionResponse.json();
+            console.log('Submission Result:', submissionResult);
+
+            return {
+              name: assignment.name,
+              score: submissionResult.score || 'N/A',
+              pointsPossible: assignment.points_possible,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching submission for assignment ${assignment.id}:`,
+              error
+            );
+            return {
+              name: assignment.name,
+              score: 'Error',
+              pointsPossible: assignment.points_possible,
+            };
+          }
+        })
+      );
 
       setAssignments(formattedAssignments);
     } catch (error) {
@@ -71,11 +102,12 @@ const StudentView = () => {
 
   const calculateAverageScore = () => {
     const gradedAssignments = assignments.filter(
-      (assignment) => assignment.score !== 'N/A'
+      (assignment) => assignment.score !== 'N/A' && assignment.score !== 'Error'
     );
     return (
       gradedAssignments.reduce(
-        (acc, assignment) => acc + Number(assignment.score),
+        (acc, assignment) =>
+          acc + (Number(assignment.score) / assignment.pointsPossible) * 100,
         0
       ) / gradedAssignments.length
     );
@@ -163,16 +195,19 @@ const StudentView = () => {
                     <h3 className="item-title">{assignment.name}</h3>
                     <p
                       className={`item-score ${
-                        assignment.score === 'N/A'
+                        assignment.score === 'N/A' ||
+                        assignment.score === 'Error'
                           ? ''
-                          : Number(assignment.score) < 70
+                          : Number(assignment.score) <
+                            assignment.pointsPossible * 0.7
                           ? 'score-bad'
                           : 'score-good'
                       }`}
                     >
-                      {assignment.score === 'N/A'
-                        ? 'N/A'
-                        : `${assignment.score}%`}
+                      {assignment.score === 'N/A' ||
+                      assignment.score === 'Error'
+                        ? assignment.score
+                        : `${assignment.score}/${assignment.pointsPossible}`}
                     </p>
                   </div>
                 </li>
