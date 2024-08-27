@@ -5,7 +5,26 @@ import youtube from './imgs/youtube.png';
 const StudentView = () => {
   const [activeTab, setActiveTab] = useState('assignments');
   const [assignments, setAssignments] = useState([]);
-  const [recommendedVideos, setRecommendedVideos] = useState([]);
+  const [recommendedVideos, setRecommendedVideos] = useState([
+    {
+      id: 1,
+      title: 'Understanding Pointers in C',
+      url: 'https://www.youtube.com/watch?v=example1',
+      reason: 'Based on your recent quiz performance',
+    },
+    {
+      id: 2,
+      title: 'Memory Allocation in C++',
+      url: 'https://www.youtube.com/watch?v=example2',
+      reason: 'Recommended by your professor',
+    },
+    {
+      id: 3,
+      title: 'Data Structures: Linked Lists',
+      url: 'https://www.youtube.com/watch?v=example3',
+      reason: 'Upcoming topic in your course',
+    },
+  ]);
   const [notes, setNotes] = useState([]);
   const [courseId, setCourseId] = useState('');
 
@@ -222,10 +241,13 @@ const StudentView = () => {
           <h2 className="content-title">Recommended Videos</h2>
           <ul>
             {recommendedVideos.map((video) => (
-              <li key={video.name} className="list-item">
-                <span className="item-title">{video.name}</span>
+              <li key={video.id} className="list-item">
+                <div>
+                  <span className="item-title">{video.title}</span>
+                  <p className="video-reason">{video.reason}</p>
+                </div>
                 <a
-                  href={video.link}
+                  href={video.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="youtube-link"
