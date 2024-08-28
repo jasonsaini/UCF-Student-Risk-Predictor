@@ -32,6 +32,12 @@ const StudentView = () => {
 
   const imgs = { youtube };
 
+  const getCanvasBaseUrl = () => {
+    const url = window.location.href;
+    const match = url.match(/(https?:\/\/[^\/]+)/);
+    return match ? match[1] : null;
+  };
+
   const fetchCurrentCourseId = () => {
     const url = window.location.href;
     const match = url.match(/\/courses\/(\d+)/);
@@ -42,6 +48,12 @@ const StudentView = () => {
   };
 
   const fetchAssignments = async (courseId) => {
+    const baseUrl = getCanvasBaseUrl();
+    if (!baseUrl) {
+      console.error('Unable to determine Canvas base URL');
+      return;
+    }
+
     const myHeaders = new Headers();
     myHeaders.append(
       'Authorization',
@@ -56,7 +68,7 @@ const StudentView = () => {
 
     try {
       const assignmentsResponse = await fetch(
-        `https://webcourses.ucf.edu/api/v1/courses/${courseId}/assignments`,
+        `${baseUrl}/api/v1/courses/${courseId}/assignments`,
         requestOptions
       );
       const assignmentsResult = await assignmentsResponse.json();
@@ -67,7 +79,7 @@ const StudentView = () => {
           console.log('Fetching submission for Assignment ID:', assignment.id);
           try {
             const submissionResponse = await fetch(
-              `https://webcourses.ucf.edu/api/v1/courses/${courseId}/assignments/${assignment.id}/submissions/self`,
+              `${baseUrl}/api/v1/courses/${courseId}/assignments/${assignment.id}/submissions/self`,
               requestOptions
             );
             if (!submissionResponse.ok) {
@@ -150,7 +162,7 @@ const StudentView = () => {
   return (
     <body className="student-view">
       <div className="container">
-        <div className="performance-overview">
+        <div className="performance-overview fade-in">
           <h2 className="overview-title">Your Performance Overview</h2>
           <h3>{name}</h3>
           <div className="overview-grid">
@@ -204,12 +216,16 @@ const StudentView = () => {
       </div>
 
       {activeTab === 'assignments' && (
-        <div className="content-container">
+        <div className="content-container slide-in">
           <h2 className="content-title">Your Assignments</h2>
           <div className="assignments-list">
             <ul>
-              {assignments.map((assignment) => (
-                <li key={assignment.name} className="list-item">
+              {assignments.map((assignment, index) => (
+                <li
+                  key={assignment.name}
+                  className="list-item slide-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
                   <div>
                     <h3 className="item-title">{assignment.name}</h3>
                     <p
@@ -237,11 +253,15 @@ const StudentView = () => {
       )}
 
       {activeTab === 'videos' && (
-        <div className="content-container">
+        <div className="content-container slide-in">
           <h2 className="content-title">Recommended Videos</h2>
           <ul>
-            {recommendedVideos.map((video) => (
-              <li key={video.id} className="list-item">
+            {recommendedVideos.map((video, index) => (
+              <li
+                key={video.id}
+                className="list-item slide-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <div>
                   <span className="item-title">{video.title}</span>
                   <p className="video-reason">{video.reason}</p>
@@ -261,15 +281,14 @@ const StudentView = () => {
       )}
 
       {activeTab === 'notes' && (
-        <div className="content-container">
+        <div className="content-container slide-in">
           <h2 className="content-title">Your Notes</h2>
           <textarea
-            className="notes-textarea"
+            className="notes-textarea fade-in"
             placeholder="Enter your note..."
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 addNote(e.target.value);
-                e.target.value = '';
               }
             }}
           ></textarea>
