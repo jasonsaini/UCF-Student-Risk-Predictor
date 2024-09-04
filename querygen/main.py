@@ -27,7 +27,7 @@ def generate_hint(model, question, previous_hints):
     The following are hints generated from previous questions:
     {previous_hints_text}
 
-    Now analyze the current question, and provide the topic or subject, while considering prior hints:
+    Now analyze the current question, and provide the topic or subject, while considering prior hints but prioritizing the current question:
 
     {question}
     """
@@ -50,9 +50,10 @@ def main(model='gemma2:latest'):
         
         previous_hints.append(new_hint.strip())
     
-    print("All hints generated during the session:")
+    print("All hints: {")
     for idx, hint in enumerate(previous_hints):
-        print(f"Hint {idx+1}: {hint}")
+        print(f"({hint}), ", end=" ")
+    print("}")
 
 if __name__ == "__main__":
     main()
