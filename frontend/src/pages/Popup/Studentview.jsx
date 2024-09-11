@@ -2,6 +2,61 @@ import React, { useState, useEffect } from 'react';
 import './Studentview.css';
 import youtube from './imgs/youtube.png';
 
+const calculateSlope = (assignments) => {
+  const lastFiveAssignments = assignments
+    .filter(
+      (assignment) => assignment.score !== 'N/A' && assignment.score !== 'Error'
+    )
+    .slice(-5);
+
+  if (lastFiveAssignments.length < 2) {
+    return 0; // Not enough data to calculate slope
+  }
+
+  const x = Array.from({ length: lastFiveAssignments.length }, (_, i) => i + 1);
+  const y = lastFiveAssignments.map(
+    (assignment) => (Number(assignment.score) / assignment.pointsPossible) * 100
+  );
+
+  const n = x.length;
+  const sumX = x.reduce((a, b) => a + b, 0);
+  const sumY = y.reduce((a, b) => a + b, 0);
+  const sumXY = x.reduce((a, b, i) => a + b * y[i], 0);
+  const sumXSquared = x.reduce((a, b) => a + b * b, 0);
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumXSquared - sumX * sumX);
+  return slope;
+};
+
+const normalizeGts = (slope, minSlope = -10, maxSlope = 10) => {
+  return ((slope - minSlope) / (maxSlope - minSlope)) * 100;
+};
+
+const calculateRiskIndex = (rps, cgs, gts, currentScore) => {
+  if (currentScore <= 69) {
+    return { riskLevel: 'High Risk' };
+  }
+
+  const weights = {
+    rps: 0.3,
+    cgs: 0.55,
+    gts: 0.15,
+  };
+
+  const riskIndex = weights.rps * rps + weights.cgs * cgs + weights.gts * gts;
+
+  let riskLevel;
+  if (riskIndex > 70) {
+    riskLevel = 'Low Risk';
+  } else if (riskIndex > 40 && riskIndex <= 70) {
+    riskLevel = 'Medium Risk';
+  } else {
+    riskLevel = 'High Risk';
+  }
+
+  return { riskLevel };
+};
+
 const StudentView = () => {
   const [activeTab, setActiveTab] = useState('assignments');
   const [assignments, setAssignments] = useState([]);
@@ -131,33 +186,62 @@ const StudentView = () => {
     return () => clearInterval(intervalId);
   }, [courseId]);
 
-  const calculateAverageScore = () => {
+  const calculateClassGrade = () => {
     const gradedAssignments = assignments.filter(
       (assignment) => assignment.score !== 'N/A' && assignment.score !== 'Error'
     );
-    return (
-      gradedAssignments.reduce(
-        (acc, assignment) =>
-          acc + (Number(assignment.score) / assignment.pointsPossible) * 100,
-        0
-      ) / gradedAssignments.length
+
+    if (gradedAssignments.length === 0) {
+      return 'N/A';
+    }
+
+    const totalPoints = gradedAssignments.reduce(
+      (sum, assignment) => sum + Number(assignment.score),
+      0
     );
+    const totalPossiblePoints = gradedAssignments.reduce(
+      (sum, assignment) => sum + assignment.pointsPossible,
+      0
+    );
+
+    return ((totalPoints / totalPossiblePoints) * 100).toFixed(2);
   };
 
-  const averageScore = calculateAverageScore();
-  const riskFactor = averageScore < 50 ? 1 : averageScore < 70 ? 0.5 : 0;
+  const calculateRisk = () => {
+    const slope = calculateSlope(assignments);
+    const gts = normalizeGts(slope);
 
-  const getRiskLevelClass = () => {
-    return riskFactor === 1
-      ? 'risk-high'
-      : riskFactor === 0.5
-      ? 'risk-medium'
-      : 'risk-low';
+    const classGrade = parseFloat(calculateClassGrade());
+    if (isNaN(classGrade)) {
+      return { riskLevel: 'Medium Risk' };
+    }
+
+    // You'll need to implement or define these values based on your specific requirements
+    const rps = classGrade; // Using class grade as Recent Performance Score
+    const cgs = classGrade; // Using class grade as Cumulative Grade Score
+
+    return calculateRiskIndex(rps, cgs, gts, classGrade);
+  };
+
+  const getRiskLevelClass = (riskLevel) => {
+    switch (riskLevel) {
+      case 'High Risk':
+        return 'risk-high';
+      case 'Medium Risk':
+        return 'risk-medium';
+      case 'Low Risk':
+        return 'risk-low';
+      default:
+        return '';
+    }
   };
 
   const addNote = (note) => {
     setNotes([...notes, note]);
   };
+
+  const classGrade = calculateClassGrade();
+  const { riskLevel } = calculateRisk();
 
   return (
     <body className="student-view">
@@ -168,18 +252,14 @@ const StudentView = () => {
           <div className="overview-grid">
             <div>
               <h3 className="risk-level">Risk Level</h3>
-              <p className={`risk-value ${getRiskLevelClass()}`}>
-                {riskFactor === 1
-                  ? 'High'
-                  : riskFactor === 0.5
-                  ? 'Medium'
-                  : 'Low'}
+              <p className={`risk-value ${getRiskLevelClass(riskLevel)}`}>
+                {riskLevel}
               </p>
             </div>
             <div>
-              <h3 className="risk-level">Average Score</h3>
+              <h3 className="risk-level">Class Grade</h3>
               <p className="risk-value average-score">
-                {averageScore.toFixed(2)}%
+                {classGrade === 'N/A' ? 'N/A' : `${classGrade}%`}
               </p>
             </div>
             <div>
