@@ -8,6 +8,7 @@ import openai
 import os
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
+from ytsearch import query_videos
 
 load_dotenv()
 app = Flask(__name__)
@@ -16,7 +17,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 def generate_query(question):
 
     prompt = f"""
-    Take the following question from a quiz, homework, or exam, and generate an effective YouTube video search query that will help someone find educational videos to study the topic. The search query should:
+    Take the following question and generate an effective YouTube video search query that will help someone find educational videos to study the topic. The search query should:
     Be concise and include the most relevant keywords and phrases from the question.
     Optimize for YouTube's search algorithm by considering common video titles and descriptions.
     Avoid unnecessary words or details that don't aid in finding helpful videos.
