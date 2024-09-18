@@ -10,7 +10,7 @@ const calculateSlope = (assignments) => {
     .slice(-5);
 
   if (lastFiveAssignments.length < 2) {
-    return 0; // Not enough data to calculate slope
+    return 0;
   }
 
   const x = Array.from({ length: lastFiveAssignments.length }, (_, i) => i + 1);
@@ -82,6 +82,8 @@ const StudentView = () => {
   ]);
   const [notes, setNotes] = useState([]);
   const [courseId, setCourseId] = useState('');
+  const [apiToken, setApiToken] = useState('');
+  const [classGrade, setClassGrade] = useState('N/A');
 
   const name = 'Justin Gamboa';
 
@@ -109,11 +111,14 @@ const StudentView = () => {
       return;
     }
 
+    const storedToken = localStorage.getItem('apiToken');
+    if (!storedToken) {
+      console.error('No API token found');
+      return;
+    }
+
     const myHeaders = new Headers();
-    myHeaders.append(
-      'Authorization',
-      'Bearer 1158~xYFM7MAFfKKQGcBvnwHMFBB3nwCwT2Q2V2WAkPM8N974AHFkXRmmDVa986Nr8YR8'
-    );
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
 
     const requestOptions = {
       method: 'GET',
@@ -170,57 +175,68 @@ const StudentView = () => {
     }
   };
 
+  const fetchEnrollment = async (courseId) => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return null;
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/courses/${courseId}/enrollments?user_id=self`,
+        requestOptions
+      );
+      const enrollmentData = await response.json();
+      return enrollmentData[0].grades.current_score;
+    } catch (error) {
+      console.error('Error fetching enrollment data:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
-    const updateCourseAndAssignments = () => {
+    const updateCourseAndData = async () => {
       const currentCourseId = fetchCurrentCourseId();
       if (currentCourseId && currentCourseId !== courseId) {
         setCourseId(currentCourseId);
         fetchAssignments(currentCourseId);
+        const overallGrade = await fetchEnrollment(currentCourseId);
+        setClassGrade(overallGrade);
       }
     };
 
-    updateCourseAndAssignments();
+    updateCourseAndData();
 
-    const intervalId = setInterval(updateCourseAndAssignments, 5000);
+    const intervalId = setInterval(updateCourseAndData, 5000);
 
     return () => clearInterval(intervalId);
   }, [courseId]);
-
-  const calculateClassGrade = () => {
-    const gradedAssignments = assignments.filter(
-      (assignment) => assignment.score !== 'N/A' && assignment.score !== 'Error'
-    );
-
-    if (gradedAssignments.length === 0) {
-      return 'N/A';
-    }
-
-    const totalPoints = gradedAssignments.reduce(
-      (sum, assignment) => sum + Number(assignment.score),
-      0
-    );
-    const totalPossiblePoints = gradedAssignments.reduce(
-      (sum, assignment) => sum + assignment.pointsPossible,
-      0
-    );
-
-    return ((totalPoints / totalPossiblePoints) * 100).toFixed(2);
-  };
 
   const calculateRisk = () => {
     const slope = calculateSlope(assignments);
     const gts = normalizeGts(slope);
 
-    const classGrade = parseFloat(calculateClassGrade());
-    if (isNaN(classGrade)) {
+    const currentGrade = parseFloat(classGrade);
+    if (isNaN(currentGrade)) {
       return { riskLevel: 'Medium Risk' };
     }
 
-    // You'll need to implement or define these values based on your specific requirements
-    const rps = classGrade; // Using class grade as Recent Performance Score
-    const cgs = classGrade; // Using class grade as Cumulative Grade Score
+    const rps = currentGrade;
+    const cgs = currentGrade;
 
-    return calculateRiskIndex(rps, cgs, gts, classGrade);
+    return calculateRiskIndex(rps, cgs, gts, currentGrade);
   };
 
   const getRiskLevelClass = (riskLevel) => {
@@ -240,12 +256,22 @@ const StudentView = () => {
     setNotes([...notes, note]);
   };
 
-  const classGrade = calculateClassGrade();
   const { riskLevel } = calculateRisk();
 
   return (
     <body className="student-view">
       <div className="container">
+        <div className="api-token-input">
+          <input
+            type="text"
+            placeholder="Enter your API token"
+            value={apiToken}
+            onChange={(e) => setApiToken(e.target.value)}
+          />
+          <button onClick={() => localStorage.setItem('apiToken', apiToken)}>
+            Save Token
+          </button>
+        </div>
         <div className="performance-overview fade-in">
           <h2 className="overview-title">Your Performance Overview</h2>
           <h3>{name}</h3>
@@ -259,7 +285,7 @@ const StudentView = () => {
             <div>
               <h3 className="risk-level">Class Grade</h3>
               <p className="risk-value average-score">
-                {classGrade === 'N/A' ? 'N/A' : `${classGrade}%`}
+                {classGrade === null ? 'N/A' : `${classGrade}%`}
               </p>
             </div>
             <div>
