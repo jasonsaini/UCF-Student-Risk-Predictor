@@ -1,0 +1,182 @@
+/* Studentview.css */
+body {
+  background-color: white;
+}
+
+.container {
+  max-width: 42rem;
+  margin: 1rem auto;
+}
+
+.performance-overview {
+  background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.overview-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.overview-grid > div {
+  border: 1px solid #f3f4f6;
+  padding: 10px;
+}
+
+.risk-level {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.risk-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.risk-high { color: #dc2626; }
+.risk-medium { color: #f59e0b; }
+.risk-low { color: #10b981; }
+
+.average-score {
+  color: #374151;
+}
+
+.recommended-videos {
+  color: #2563eb;
+}
+
+.tab-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background-color: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tab-button.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.content-container {
+  max-width: 42rem;
+  margin: 0 auto;
+  border: 1px solid #e5e7eb;
+  padding: 15px;
+  height: 400px;
+  overflow: hidden;
+}
+
+.assignments-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 0.75rem;
+  border-left-width: 4px;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+  border: 1px solid #f3f4f6;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.list-item:hover {
+  background-color: #bfdbfe;
+  transform: translateX(5px);
+}
+
+.item-title {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.item-score {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.score-good { color: #10b981; }
+.score-bad { color: #dc2626; }
+
+.youtube-link img {
+  height: 1.5rem;
+  width: 2.25rem;
+}
+
+.notes-textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.note-item {
+  background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #3b82f6;
+  border-radius: 0.25rem;
+}
+
+.note-text {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
