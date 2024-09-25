@@ -62,22 +62,27 @@ const StudentView = () => {
   const [assignments, setAssignments] = useState([]);
   const [recommendedVideos, setRecommendedVideos] = useState([
     {
-      id: 1,
-      title: 'Understanding Pointers in C',
-      url: 'https://www.youtube.com/watch?v=example1',
-      reason: 'Based on your recent quiz performance',
+      id: '0oc49DyA3hU',
+      title: 'Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!',
+      url: 'https://www.youtube.com/watch?v=0oc49DyA3hU',
+      reason: 'Learn about null hypothesis',
+      thumbnail:
+        'https://i.ytimg.com/vi/0oc49DyA3hU/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBdxKGEtqG8V2ls964UoVdIvEH1mA',
+      duration: '14:41',
+      viewCount: '555,966 views',
+      channel: 'StatQuest with Josh Starmer',
     },
     {
-      id: 2,
-      title: 'Memory Allocation in C++',
-      url: 'https://www.youtube.com/watch?v=example2',
-      reason: 'Recommended by your professor',
-    },
-    {
-      id: 3,
-      title: 'Data Structures: Linked Lists',
-      url: 'https://www.youtube.com/watch?v=example3',
-      reason: 'Upcoming topic in your course',
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
     },
   ]);
   const [notes, setNotes] = useState([]);
@@ -256,22 +261,36 @@ const StudentView = () => {
     setNotes([...notes, note]);
   };
 
+  const removeToken = () => {
+    localStorage.removeItem('apiToken');
+    setApiToken('');
+    setAssignments([]);
+    setClassGrade('N/A');
+  };
+
   const { riskLevel } = calculateRisk();
 
   return (
     <body className="student-view">
       <div className="container">
-        <div className="api-token-input">
-          <input
-            type="text"
-            placeholder="Enter your API token"
-            value={apiToken}
-            onChange={(e) => setApiToken(e.target.value)}
-          />
-          <button onClick={() => localStorage.setItem('apiToken', apiToken)}>
-            Save Token
-          </button>
-        </div>
+        {localStorage.getItem('apiToken') ? (
+          <div className="api-token-input">
+            <p>API Token is set</p>
+            <button onClick={removeToken}>Remove Token</button>
+          </div>
+        ) : (
+          <div className="api-token-input">
+            <input
+              type="password"
+              placeholder="Enter your API token"
+              value={apiToken}
+              onChange={(e) => setApiToken(e.target.value)}
+            />
+            <button onClick={() => localStorage.setItem('apiToken', apiToken)}>
+              Save Token
+            </button>
+          </div>
+        )}
         <div className="performance-overview fade-in">
           <h2 className="overview-title">Your Performance Overview</h2>
           <h3>{name}</h3>
@@ -368,9 +387,15 @@ const StudentView = () => {
                 className="list-item slide-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div>
-                  <span className="item-title">{video.title}</span>
-                  <p className="video-reason">{video.reason}</p>
+                <div className="video-card">
+                  <div className="video-info">
+                    <h3 className="item-title">{video.title}</h3>
+                    <p className="video-channel">{video.channel}</p>
+                    <p className="video-stats">
+                      {video.viewCount} • {video.duration}
+                    </p>
+                    <p className="video-reason">{video.reason}</p>
+                  </div>
                 </div>
                 <a
                   href={video.url}
@@ -378,7 +403,7 @@ const StudentView = () => {
                   rel="noopener noreferrer"
                   className="youtube-link"
                 >
-                  <img src={youtube} alt="youtube-logo" />
+                  <img src={video.thumbnail} alt="youtube-logo" />
                 </a>
               </li>
             ))}
