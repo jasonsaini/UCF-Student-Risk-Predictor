@@ -5,39 +5,142 @@ import youtube from '../Popup/imgs/youtube.png';
 const InstructorView = () => {
   const [activeTab, setActiveTab] = useState('assignments');
   const [students, setStudents] = useState([]);
-  const [attendance, setAttendance] = useState({});
   const [notifications, setNotifications] = useState([]);
 
   const imgs = { youtube };
 
-  // Fetch student and attendance data
-  useEffect(() => {
-    // Fetch student data from an API or database
-    setStudents([
-      { name: 'John Doe', scores: [77, 33] },
-      { name: 'Jane Smith', scores: [92, 85] },
-      // Add more students as needed
-    ]);
-
-    // Fetch attendance data from an API or database
-    setAttendance({
-      'John Doe': [true, false, true],
-      'Jane Smith': [true, true, true],
-      // Add more attendance data as needed
-    });
-  }, []);
-
-  // Calculate average score to determine risk
-  const calculateAverageScore = (scores) => {
-    return scores.reduce((acc, score) => acc + score, 0) / scores.length;
+  const getCanvasBaseUrl = () => {
+    const url = window.location.href;
+    const match = url.match(/(https?:\/\/[^\/]+)/);
+    return match ? match[1] : null;
   };
 
-  // Calculate risk factor
+  const fetchCurrentCourseId = () => {
+    const url = window.location.href;
+    const match = url.match(/\/courses\/(\d+)/);
+    return match && match[1] ? match[1] : null;
+  };
+
+  const fetchEnrollments = async (courseId) => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return [];
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/courses/${courseId}/enrollments`,
+        requestOptions
+      );
+      const enrollmentData = await response.json();
+      return enrollmentData.filter(
+        (enrollment) => enrollment.type === 'StudentEnrollment'
+      );
+    } catch (error) {
+      console.error('Error fetching enrollment data:', error);
+      return [];
+    }
+  };
+
+  const fetchAssignments = async (courseId, userId) => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return [];
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const assignmentsResponse = await fetch(
+        `${baseUrl}/api/v1/courses/${courseId}/assignments`,
+        requestOptions
+      );
+      const assignmentsResult = await assignmentsResponse.json();
+
+      const studentAssignments = await Promise.all(
+        assignmentsResult.map(async (assignment) => {
+          const submissionResponse = await fetch(
+            `${baseUrl}/api/v1/courses/${courseId}/assignments/${assignment.id}/submissions/${userId}`,
+            requestOptions
+          );
+          const submissionResult = await submissionResponse.json();
+
+          return {
+            name: assignment.name,
+            score: submissionResult.score || 'N/A',
+            pointsPossible: assignment.points_possible,
+          };
+        })
+      );
+
+      return studentAssignments;
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const courseId = fetchCurrentCourseId();
+      if (courseId) {
+        const enrollments = await fetchEnrollments(courseId);
+        const studentData = await Promise.all(
+          enrollments.map(async (enrollment) => {
+            const assignments = await fetchAssignments(
+              courseId,
+              enrollment.user_id
+            );
+            return {
+              id: enrollment.user_id,
+              name: enrollment.user.name,
+              scores: assignments.map((a) =>
+                a.score !== 'N/A' ? parseFloat(a.score) : 0
+              ),
+              assignments: assignments,
+            };
+          })
+        );
+        setStudents(studentData);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const calculateAverageScore = (scores) => {
+    const validScores = scores.filter((score) => score !== 'N/A');
+    return validScores.length > 0
+      ? validScores.reduce((acc, score) => acc + score, 0) / validScores.length
+      : 0;
+  };
+
   const calculateRiskFactor = (averageScore) => {
     return averageScore < 50 ? 1 : averageScore < 70 ? 0.5 : 0;
   };
 
-  // Define the risk meter color based on the risk factor
   const getRiskMeterColor = (riskFactor) => {
     return riskFactor === 1
       ? 'bg-red-600'
@@ -46,7 +149,6 @@ const InstructorView = () => {
       : 'bg-green-500';
   };
 
-  // Calculate class performance overview
   const getClassPerformanceOverview = () => {
     let highRiskCount = 0;
     let mediumRiskCount = 0;
@@ -79,7 +181,6 @@ const InstructorView = () => {
     };
   };
 
-  // Handle sending notifications
   const sendNotification = (message) => {
     setNotifications([...notifications, message]);
   };
@@ -224,10 +325,8 @@ const InstructorView = () => {
     },
   };
 
-  // Render the components
   return (
     <body style={styles.body}>
-      {/* Class Performance Overview */}
       <div style={styles.container}>
         <div>
           <h2 style={styles.title}>Class Performance Overview</h2>
@@ -258,14 +357,15 @@ const InstructorView = () => {
         </div>
       </div>
 
-      {/* Student Risk Dashboard */}
-      <div style={styles.container}>
+      <div
+        style={{ ...styles.container, maxHeight: '400px', overflowY: 'auto' }}
+      >
         <div>
           <h2 style={styles.title}>Student Risk Dashboard</h2>
           <ul style={styles.studentList}>
             {students.map((student) => (
               <li
-                key={student.name}
+                key={student.id}
                 style={{
                   ...styles.studentItem,
                   ':hover': styles.studentItemHover,
@@ -276,11 +376,6 @@ const InstructorView = () => {
                   <p style={styles.studentDetail}>
                     Average Score:{' '}
                     {calculateAverageScore(student.scores).toFixed(2)}%
-                  </p>
-                  <p style={styles.studentDetail}>
-                    Attendance:{' '}
-                    {attendance[student.name].filter(Boolean).length}/
-                    {attendance[student.name].length}
                   </p>
                 </div>
                 <div>
@@ -315,7 +410,6 @@ const InstructorView = () => {
         </div>
       </div>
 
-      {/* Early Intervention Alerts */}
       <div style={styles.container}>
         <div>
           <h2 style={styles.title}>Early Intervention Alerts</h2>
@@ -328,7 +422,7 @@ const InstructorView = () => {
               )
               .map((student) => (
                 <li
-                  key={student.name}
+                  key={student.id}
                   style={{
                     ...styles.studentItem,
                     borderLeft: '4px solid #e53e3e',
@@ -339,11 +433,6 @@ const InstructorView = () => {
                     <p style={styles.studentDetail}>
                       Average Score:{' '}
                       {calculateAverageScore(student.scores).toFixed(2)}%
-                    </p>
-                    <p style={styles.studentDetail}>
-                      Attendance:{' '}
-                      {attendance[student.name].filter(Boolean).length}/
-                      {attendance[student.name].length}
                     </p>
                   </div>
                   <button
@@ -362,7 +451,6 @@ const InstructorView = () => {
         </div>
       </div>
 
-      {/* Communication Tools */}
       <div style={styles.container}>
         <div>
           <h2 style={styles.title}>Communication Tools</h2>
