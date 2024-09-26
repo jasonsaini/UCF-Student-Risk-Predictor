@@ -1,68 +1,119 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Popup.css';
 import youtube from '../Popup/imgs/youtube.png';
 import StudentView from './Studentview';
 import InstructorView from './InstructorView';
-const Popup = () => {
-  const myHeaders = new Headers();
-  myHeaders.append(
-    'Authorization',
-    'Bearer 7~qgjCewHFGcI25c2nfC4C7WsHZFqMiPcOyzT2SgcCxA0xcm6PvJRMKdwLr5iRMcaD'
-  );
-  myHeaders.append(
-    'Cookie',
-    '_csrf_token=E92j7dJYyWJC%2B1c76fzV%2BB9Gx1apfx1MgEoPRrZYRr50jJC74SinBjfJE1arz6OdUW3zJscvUiCzZUEM8xIs8A%3D%3D; _legacy_normandy_session=hWYkcDI52hz7WxTktAnWyA.-I-h_fm_Chw7ZbiGjANpdM-hXwR0yhZODLcm78e8iz1GoDTQUE_aNMhUbpbshIPWzV6vCOAIAmVacxFTh7MIZNkXLEXpyiqhfSPLdg7BtIQByX9-A1hz2jf_5XZuSlNF.fiy-CqkiEbv3VawUafy05I9mc7o.Zfzt7Q; canvas_session=hWYkcDI52hz7WxTktAnWyA.-I-h_fm_Chw7ZbiGjANpdM-hXwR0yhZODLcm78e8iz1GoDTQUE_aNMhUbpbshIPWzV6vCOAIAmVacxFTh7MIZNkXLEXpyiqhfSPLdg7BtIQByX9-A1hz2jf_5XZuSlNF.fiy-CqkiEbv3VawUafy05I9mc7o.Zfzt7Q; log_session_id=417d68957a9507a555430e469bf82e4a'
-  );
 
-  const requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow',
+const Popup = () => {
+  const [userRole, setUserRole] = useState('');
+  const [apiToken, setApiToken] = useState('');
+  const [assignments, setAssignments] = useState([]);
+  const [students, setStudents] = useState([]);
+
+  const getCanvasBaseUrl = () => {
+    const url = window.location.href;
+    const match = url.match(/(https?:\/\/[^\/]+)/);
+    return match ? match[1] : null;
   };
 
-  fetch(
-    'https://canvas.instructure.com/api/v1/courses/8660249/quizzes/17522683/submissions',
-    requestOptions
-  )
-    .then((response) => response.text())
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
+  const fetchCurrentCourseId = () => {
+    const url = window.location.href;
+    const match = url.match(/\/courses\/(\d+)/);
+    return match && match[1] ? match[1] : null;
+  };
 
-  const [activeTab, setActiveTab] = useState('assignments');
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const baseUrl = getCanvasBaseUrl();
+      const courseId = fetchCurrentCourseId();
+      const storedToken = localStorage.getItem('apiToken');
 
-  const [userRole, setUserRole] = useState('student'); // Example: set this based on authenticated user role
+      if (!baseUrl || !courseId || !storedToken) {
+        console.error('Missing base URL, course ID, or API token');
+        return;
+      }
 
-  const imgs = { youtube };
+      const myHeaders = new Headers();
+      myHeaders.append('Authorization', `Bearer ${storedToken}`);
 
-  const assignments = [
-    { name: 'COT 4210 -- Homework 3', score: 77 },
-    { name: 'COP 4934 - Journal Week 5', score: 33 },
-  ];
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
 
-  // Calculate average score to determine risk
-  const averageScore =
-    assignments.reduce((acc, assignment) => acc + assignment.score, 0) /
-    assignments.length;
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/courses/${courseId}/enrollments?user_id=self`,
+          requestOptions
+        );
+        const enrollmentData = await response.json();
+        const role = enrollmentData[0].type;
+        console.log('User role:', role);
+        setUserRole(role);
 
-  // Risk factor, simple logic where below 50% is high risk
-  const riskFactor = averageScore < 50 ? 1 : averageScore < 70 ? 0.5 : 0;
+        if (role === 'StudentEnrollment') {
+          fetchAssignments(baseUrl, courseId, storedToken);
+        } else if (role === 'TeacherEnrollment') {
+          fetchStudents(baseUrl, courseId, storedToken);
+        }
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      }
+    };
 
-  const students = [{ name: 'Student One', assignments: assignments }];
+    if (localStorage.getItem('apiToken')) {
+      fetchUserRole();
+    }
+  }, []);
 
-  // Define the risk meter color based on the risk factor
-  const riskMeterColor =
-    riskFactor === 1
-      ? 'bg-red-600'
-      : riskFactor === 0.5
-      ? 'bg-yellow-500'
-      : 'bg-green-500';
+  const fetchAssignments = async (baseUrl, courseId, token) => {
+    // Implement assignment fetching logic here
+  };
+
+  const fetchStudents = async (baseUrl, courseId, token) => {
+    // Implement student fetching logic here
+  };
+
+  const removeToken = () => {
+    localStorage.removeItem('apiToken');
+    setApiToken('');
+    setUserRole('');
+    setAssignments([]);
+    setStudents([]);
+  };
 
   return (
-    <div>
-      {userRole === 'student' ? (
+    <div className="container">
+      {localStorage.getItem('apiToken') ? (
+        <div className="api-token-input">
+          <p>API Token is set</p>
+          <button onClick={removeToken}>Remove Token</button>
+        </div>
+      ) : (
+        <div className="api-token-input">
+          <input
+            type="password"
+            placeholder="Enter your API token"
+            value={apiToken}
+            onChange={(e) => setApiToken(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              localStorage.setItem('apiToken', apiToken);
+              window.location.reload();
+            }}
+          >
+            Save Token
+          </button>
+        </div>
+      )}
+      {userRole === 'TeacherEnrollment' ? (
+        <InstructorView students={students} />
+      ) : userRole === 'StudentEnrollment' ? (
         <StudentView assignments={assignments} />
       ) : (
-        <InstructorView students={students} />
+        <p>Please enter your API token to view your data.</p>
       )}
     </div>
   );
