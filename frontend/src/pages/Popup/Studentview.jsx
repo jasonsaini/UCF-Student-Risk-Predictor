@@ -89,8 +89,7 @@ const StudentView = () => {
   const [courseId, setCourseId] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [classGrade, setClassGrade] = useState('N/A');
-
-  const name = 'Justin Gamboa';
+  const [studentName, setStudentName] = useState('');
 
   const imgs = { youtube };
 
@@ -211,6 +210,36 @@ const StudentView = () => {
     }
   };
 
+  const fetchUserProfile = async () => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return;
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/users/self`,
+        requestOptions
+      );
+      const profileData = await response.json();
+      setStudentName(profileData.name);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
   useEffect(() => {
     const updateCourseAndData = async () => {
       const currentCourseId = fetchCurrentCourseId();
@@ -219,6 +248,7 @@ const StudentView = () => {
         fetchAssignments(currentCourseId);
         const overallGrade = await fetchEnrollment(currentCourseId);
         setClassGrade(overallGrade);
+        fetchUserProfile();
       }
     };
 
@@ -293,7 +323,7 @@ const StudentView = () => {
         )}
         <div className="performance-overview fade-in">
           <h2 className="overview-title">Your Performance Overview</h2>
-          <h3>{name}</h3>
+          <h3>{studentName}</h3>
           <div className="overview-grid">
             <div>
               <h3 className="risk-level">Risk Level</h3>
@@ -391,6 +421,7 @@ const StudentView = () => {
                   <div className="video-info">
                     <h3 className="item-title">{video.title}</h3>
                     <p className="video-channel">{video.channel}</p>
+                    www
                     <p className="video-stats">
                       {video.viewCount} • {video.duration}
                     </p>
