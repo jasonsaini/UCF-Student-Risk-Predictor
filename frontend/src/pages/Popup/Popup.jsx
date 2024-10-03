@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Popup.css';
-import youtube from '../Popup/imgs/youtube.png';
 import StudentView from './Studentview';
 import InstructorView from './InstructorView';
 
 const Popup = () => {
   const [userRole, setUserRole] = useState('');
-  const [apiToken, setApiToken] = useState('');
+  const [apiToken, setApiToken] = useState(
+    localStorage.getItem('apiToken') || ''
+  );
+  const [draftToken, setDraftToken] = useState(''); // Store the typed token
   const [assignments, setAssignments] = useState([]);
   const [students, setStudents] = useState([]);
 
@@ -62,10 +64,10 @@ const Popup = () => {
       }
     };
 
-    if (localStorage.getItem('apiToken')) {
+    if (apiToken) {
       fetchUserRole();
     }
-  }, []);
+  }, [apiToken]);
 
   const fetchAssignments = async (baseUrl, courseId, token) => {
     // Implement assignment fetching logic here
@@ -75,9 +77,18 @@ const Popup = () => {
     // Implement student fetching logic here
   };
 
+  const handleSaveToken = () => {
+    if (draftToken) {
+      localStorage.setItem('apiToken', draftToken);
+      setApiToken(draftToken);
+      setDraftToken(''); // Clear the draft input
+    }
+  };
+
   const removeToken = () => {
     localStorage.removeItem('apiToken');
     setApiToken('');
+    setDraftToken(''); // Clear the draft input when token is removed
     setUserRole('');
     setAssignments([]);
     setStudents([]);
@@ -85,7 +96,7 @@ const Popup = () => {
 
   return (
     <div className="container">
-      {localStorage.getItem('apiToken') ? (
+      {apiToken ? (
         <div className="api-token-input">
           <p>API Token is set</p>
           <button onClick={removeToken}>Remove Token</button>
@@ -95,17 +106,11 @@ const Popup = () => {
           <input
             type="password"
             placeholder="Enter your API token"
-            value={apiToken}
-            onChange={(e) => setApiToken(e.target.value)}
+            value={draftToken} // Use draftToken for the input
+            onChange={(e) => setDraftToken(e.target.value)} // Update draftToken on input
           />
-          <button
-            onClick={() => {
-              localStorage.setItem('apiToken', apiToken);
-              window.location.reload();
-            }}
-          >
-            Save Token
-          </button>
+          <button onClick={handleSaveToken}>Save Token</button>{' '}
+          {/* Save the token only when clicked */}
         </div>
       )}
       {userRole === 'TeacherEnrollment' ? (

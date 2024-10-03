@@ -85,12 +85,11 @@ const StudentView = () => {
       channel: 'Khan Academy',
     },
   ]);
-  const [notes, setNotes] = useState([]);
+  const [announcements, setAnnouncements] = useState([]); // New state for announcements
   const [courseId, setCourseId] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [classGrade, setClassGrade] = useState('N/A');
-
-  const name = 'Justin Gamboa';
+  const [studentName, setStudentName] = useState('');
 
   const imgs = { youtube };
 
@@ -107,6 +106,36 @@ const StudentView = () => {
       return match[1];
     }
     return null;
+  };
+
+  const fetchAnnouncements = async (courseId) => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return [];
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/announcements?context_codes[]=course_${courseId}`,
+        requestOptions
+      );
+      const announcementsData = await response.json();
+      setAnnouncements(announcementsData);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+    }
   };
 
   const fetchAssignments = async (courseId) => {
@@ -211,14 +240,46 @@ const StudentView = () => {
     }
   };
 
+  const fetchUserProfile = async () => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return;
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/users/self`,
+        requestOptions
+      );
+      const profileData = await response.json();
+      setStudentName(profileData.name);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
   useEffect(() => {
     const updateCourseAndData = async () => {
       const currentCourseId = fetchCurrentCourseId();
       if (currentCourseId && currentCourseId !== courseId) {
         setCourseId(currentCourseId);
         fetchAssignments(currentCourseId);
+        fetchAnnouncements(currentCourseId); // Fetching announcements
         const overallGrade = await fetchEnrollment(currentCourseId);
         setClassGrade(overallGrade);
+        fetchUserProfile();
       }
     };
 
@@ -257,18 +318,20 @@ const StudentView = () => {
     }
   };
 
-  const addNote = (note) => {
-    setNotes([...notes, note]);
-  };
-
   const removeToken = () => {
     localStorage.removeItem('apiToken');
     setApiToken('');
     setAssignments([]);
     setClassGrade('N/A');
+    setAnnouncements([]); // Clear announcements on token removal
   };
 
   const { riskLevel } = calculateRisk();
+
+  const stripHTML = (htmlString) => {
+    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+    return doc.body.textContent || '';
+  };
 
   return (
     <body className="student-view">
@@ -293,7 +356,7 @@ const StudentView = () => {
         )}
         <div className="performance-overview fade-in">
           <h2 className="overview-title">Your Performance Overview</h2>
-          <h3>{name}</h3>
+          <h3>{studentName}</h3>
           <div className="overview-grid">
             <div>
               <h3 className="risk-level">Risk Level</h3>
@@ -333,10 +396,12 @@ const StudentView = () => {
           Recommended Videos
         </button>
         <button
-          className={`tab-button ${activeTab === 'notes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notes')}
+          className={`tab-button ${
+            activeTab === 'announcements' ? 'active' : ''
+          }`}
+          onClick={() => setActiveTab('announcements')}
         >
-          Notes
+          Announcements
         </button>
       </div>
 
@@ -411,24 +476,23 @@ const StudentView = () => {
         </div>
       )}
 
-      {activeTab === 'notes' && (
+      {activeTab === 'announcements' && (
         <div className="content-container slide-in">
-          <h2 className="content-title">Your Notes</h2>
-          <textarea
-            className="notes-textarea fade-in"
-            placeholder="Enter your note..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                addNote(e.target.value);
-              }
-            }}
-          ></textarea>
+          <h2 className="content-title">Recent Announcements</h2>
           <ul>
-            {notes.map((note, index) => (
-              <li key={index} className="note-item">
-                <p className="note-text">{note}</p>
-              </li>
-            ))}
+            {announcements.length > 0 ? (
+              announcements.map((announcement, index) => (
+                <li key={index} className="note-item">
+                  <p className="note-text">{stripHTML(announcement.title)}</p>
+                  <p className="note-text">{stripHTML(announcement.message)}</p>
+                  <p className="note-date">
+                    {new Date(announcement.posted_at).toLocaleString()}
+                  </p>
+                </li>
+              ))
+            ) : (
+              <p>No recent announcements.</p>
+            )}
           </ul>
         </div>
       )}
