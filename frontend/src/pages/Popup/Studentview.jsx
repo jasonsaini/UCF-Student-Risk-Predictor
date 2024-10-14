@@ -73,6 +73,102 @@ const StudentView = () => {
       channel: 'StatQuest with Josh Starmer',
     },
     {
+      id: 'bHqFaJfpviI',
+      link: 'https://www.youtube.com/watch?v=bHqFaJfpviI',
+      title: 'How To Restore USB Drive Back To Original Full Capacity/Size',
+      channel: 'Jamie Wagner',
+      reason: 'Learn about null hypothesis',
+
+      thumbnail:
+        'https://i.ytimg.com/vi/bHqFaJfpviI/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD1kAbXdZJuAKHb6w3FLGEE5g1RZw',
+      duration: '2:57',
+      viewCount: '87,833 views',
+    },
+    {
+      id: 'Ypuqyj7w21c',
+      link: 'https://www.youtube.com/watch?v=Ypuqyj7w21c',
+      title:
+        'How to Determine How Many Gigabytes Are on a Flash Drive? : Data Organization & Computer Skills',
+      channel: 'eHowTech',
+      reason: 'Learn about null hypothesis',
+
+      thumbnail:
+        'https://i.ytimg.com/vi/Ypuqyj7w21c/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAcA0zDJVE7pDLc6CoflQIO1uEKrQ',
+      duration: '2:57',
+      viewCount: '87,833 views',
+    },
+    {
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
+    },
+    {
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
+    },
+    {
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
+    },
+    {
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
+    },
+    {
+      id: 'PplggM0KtJ8',
+      title:
+        'Interpreting slope of regression line | AP Statistics | Khan Academy',
+      url: 'https://www.youtube.com/watch?v=PplggM0KtJ8',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/PplggM0KtJ8/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC-fk21dODVVwcR-o70MQWlRQ00GA',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Khan Academy',
+    },
+    {
+      id: 'IKLVSxhkZeg',
+      title: 'Past And Present Technology Then And Now',
+      url: 'https://www.youtube.com/watch?v=IKLVSxhkZeg',
+      reason: 'Understanding regression line slopes',
+      thumbnail:
+        'https://i.ytimg.com/vi/IKLVSxhkZeg/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC4PhAdWxTtSBskww_cKRhRaABkeQ',
+      duration: '2:57',
+      viewCount: '87,833 views',
+      channel: 'Be Amazed',
+    },
+    {
       id: 'PplggM0KtJ8',
       title:
         'Interpreting slope of regression line | AP Statistics | Khan Academy',
@@ -85,7 +181,7 @@ const StudentView = () => {
       channel: 'Khan Academy',
     },
   ]);
-  const [notes, setNotes] = useState([]);
+  const [announcements, setAnnouncements] = useState([]); // New state for announcements
   const [courseId, setCourseId] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [classGrade, setClassGrade] = useState('N/A');
@@ -106,6 +202,42 @@ const StudentView = () => {
       return match[1];
     }
     return null;
+  };
+
+  const fetchAnnouncements = async (courseId) => {
+    const baseUrl = getCanvasBaseUrl();
+    const storedToken = localStorage.getItem('apiToken');
+
+    if (!baseUrl || !storedToken) {
+      console.error('Missing base URL or API token');
+      return [];
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${storedToken}`);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/v1/announcements?context_codes[]=course_${courseId}`,
+        requestOptions
+      );
+      const announcementsData = await response.json();
+      setAnnouncements(announcementsData);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+    }
+  };
+
+  // Function to strip HTML tags
+  const stripHTML = (html) => {
+    let doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
   };
 
   const fetchAssignments = async (courseId) => {
@@ -246,6 +378,7 @@ const StudentView = () => {
       if (currentCourseId && currentCourseId !== courseId) {
         setCourseId(currentCourseId);
         fetchAssignments(currentCourseId);
+        fetchAnnouncements(currentCourseId); // Fetching announcements
         const overallGrade = await fetchEnrollment(currentCourseId);
         setClassGrade(overallGrade);
         fetchUserProfile();
@@ -287,15 +420,12 @@ const StudentView = () => {
     }
   };
 
-  const addNote = (note) => {
-    setNotes([...notes, note]);
-  };
-
   const removeToken = () => {
     localStorage.removeItem('apiToken');
     setApiToken('');
     setAssignments([]);
     setClassGrade('N/A');
+    setAnnouncements([]); // Clear announcements on token removal
   };
 
   const { riskLevel } = calculateRisk();
@@ -363,10 +493,12 @@ const StudentView = () => {
           Recommended Videos
         </button>
         <button
-          className={`tab-button ${activeTab === 'notes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notes')}
+          className={`tab-button ${
+            activeTab === 'announcements' ? 'active' : ''
+          }`}
+          onClick={() => setActiveTab('announcements')}
         >
-          Notes
+          Announcements
         </button>
       </div>
 
@@ -421,7 +553,6 @@ const StudentView = () => {
                   <div className="video-info">
                     <h3 className="item-title">{video.title}</h3>
                     <p className="video-channel">{video.channel}</p>
-                    www
                     <p className="video-stats">
                       {video.viewCount} • {video.duration}
                     </p>
@@ -442,24 +573,23 @@ const StudentView = () => {
         </div>
       )}
 
-      {activeTab === 'notes' && (
+      {activeTab === 'announcements' && (
         <div className="content-container slide-in">
-          <h2 className="content-title">Your Notes</h2>
-          <textarea
-            className="notes-textarea fade-in"
-            placeholder="Enter your note..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                addNote(e.target.value);
-              }
-            }}
-          ></textarea>
+          <h2 className="content-title">Recent Announcements</h2>
           <ul>
-            {notes.map((note, index) => (
-              <li key={index} className="note-item">
-                <p className="note-text">{note}</p>
-              </li>
-            ))}
+            {announcements.length > 0 ? (
+              announcements.map((announcement, index) => (
+                <li key={index} className="note-item">
+                  <p className="note-text">{stripHTML(announcement.title)}</p>
+                  <p className="note-text">{stripHTML(announcement.message)}</p>
+                  <p className="note-date">
+                    {new Date(announcement.posted_at).toLocaleString()}
+                  </p>
+                </li>
+              ))
+            ) : (
+              <p>No recent announcements.</p>
+            )}
           </ul>
         </div>
       )}
